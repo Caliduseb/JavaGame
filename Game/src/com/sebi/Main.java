@@ -1,7 +1,6 @@
 package com.sebi;
 
 import javax.swing.*;
-import java.net.URL;
 
 public class Main {
     private static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main void for easier access later
