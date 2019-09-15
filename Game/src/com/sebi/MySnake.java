@@ -186,6 +186,10 @@ public class MySnake extends JPanel implements ActionListener {
                 gameover = false;
                 timer.start();
             }
+
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+              System.exit(0);
+            }
         }
 
     }
