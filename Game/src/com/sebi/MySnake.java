@@ -14,6 +14,7 @@ public class MySnake extends JPanel implements ActionListener {
     private Hindernis hind2 = new Hindernis();
     private Hindernis hind3 = new Hindernis();
     private Health health = new Health();
+    private Sun sun = new Sun();
 
     private Timer timer;
     private Color backgr;
@@ -22,17 +23,20 @@ public class MySnake extends JPanel implements ActionListener {
     private boolean gameover = false;
     private boolean darker = false;
     private float bright = 0.97f;
+    private int asd;
+    private int sunIdle = 0;
     private int iters = 0;
     private int cont = 0;
+    enum SUNSTATE {sunUp, sunDown, moonUp, moonDown;}
 
 
     MySnake(){
-        setBackground(backgr);
+        backgr = Color.getHSBColor(0.6f, 0.8f, 0.97f/2);
+        setBackground(backgr);                  //init JPanel properties
         setFocusable(true);
         requestFocusInWindow();
         addKeyListener(new TAdapter());
         setPreferredSize(new Dimension(800, 400));
-        backgr = Color.decode("#1313CA");
         timer = new Timer(5, this);
         timer.start();
     }
@@ -40,11 +44,14 @@ public class MySnake extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        g.setColor(sun.color);
+        g.fillOval(sun.x - sun.size, sun.y - sun.size, sun.size, sun.size);
         g.setColor(Color.yellow);
-        g.fillRect(me.x, me.y, 10, 10);
+        g.fillRect(me.x, me.y, 10, 10);                   //Player rendern
 
         int abstnd = 30;
-        for (int i = 0; i < health.count; i++){
+        for (int i = 0; i < health.count; i++){                                 //Herzen rendern
             int[] xPoints = {i * abstnd, i * abstnd,  12+i*abstnd, 15+i*abstnd,
                27+i*abstnd, 27+i*abstnd, 23+i*abstnd, 16+i*abstnd, 16+i*abstnd,
                11+i*abstnd, 11+i*abstnd , 4+i*abstnd, i * abstnd};
@@ -52,12 +59,14 @@ public class MySnake extends JPanel implements ActionListener {
             g.setColor(Color.decode("#C91010"));
             g.fillPolygon(xPoints, yPoints, 13);
           }
+
         g.setColor(Color.green);
-        g.fillRect(hind.Hx, hind.Hy, hind.Hw, 400);
+        g.fillRect(hind.Hx, hind.Hy, hind.Hw, 400);       //Hindernisse Rendern
         g.fillRect(hind2.Hx, hind2.Hy, hind2.Hw, 400);
         g.fillRect(hind3.Hx, hind3.Hy, hind3.Hw, 400);
         g.setColor(Color.orange);
-        g.fillRect(0, 320, 800, 399);
+        g.fillRect(0, 320, 800, 399);                     //Boden rendern
+
 
         if(gameover){
             String msg = "Game Over";
@@ -70,11 +79,12 @@ public class MySnake extends JPanel implements ActionListener {
             g.drawString(msg, (800 - metr.stringWidth(msg)) / 2, 400 / 2 - 9);
             g.drawString(msg2, (800 - metr.stringWidth(msg2)) / 2, 400 / 2 + 9);
           }
+
       }
 
 
     private boolean collision(){
-        if (hind.Hx < me.x + 10 && me.x + 10 < hind.Hx + hind.Hw){
+        if (hind.Hx < me.x + 10 && me.x + 10 < hind.Hx + hind.Hw){      //check for each obstacle
             if (me.y + 11 >= hind.Hy){
                 return true;
             }
@@ -96,25 +106,48 @@ public class MySnake extends JPanel implements ActionListener {
         cont++;
 
         if ((int) 5 - cont/10000 >= 0){
-            timer.setDelay((int) (5 - cont/10000)); }
+            timer.setDelay((int) (5 - cont/10000));
+        }
 
-        if(cont % 10 == 0){
-            if (bright <= 0.2684843){
-                darker = true;
+        if(cont % 1 == 0){
+              if (bright <= 0.2684843){
+                  darker = true;
+                  asd = cont;
+              }
+
+              if (bright >= 0.97f){
+                  darker = false;
+                  //-1781
+              }
+
+              if (darker){
+                  bright += 0.0005/2;
+              } else {
+                  bright -= 0.0005;
+              }
+
+              backgr = Color.getHSBColor(0.6f, 0.8f, bright);
+              setBackground(backgr);
+
+
+
+
+        }
+
+
+        if(cont % 1.5 == 0){
+          if ( sun.state == SUNSTATE.sunUp && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
+          if ( sun.state == SUNSTATE.sunDown){ sun.y += 1; sun.x -= 1;}
+          if ( sun.state == SUNSTATE.moonUp  && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
+          if ( sun.state == SUNSTATE.moonDown){sun.y += 1; sun.x -= 1;}
+          if ( sunIdle > 0){
+            sun.x -= 1;
+            if (sun.x <= 315){
+              sunIdle = 0;
+              if (sun.state == SUNSTATE.sunUp){sun.state = SUNSTATE.sunDown;}
+              if (sun.state == SUNSTATE.moonUp){sun.state = SUNSTATE.moonDown;}
             }
-
-            if (bright >= 0.97f){
-                darker = false;
-            }
-
-            if (darker){
-                bright += 0.0005;
-            } else {
-                bright -= 0.0005;
-            }
-
-            backgr = Color.getHSBColor(0.6f, 0.8f, bright);
-            setBackground(backgr);
+          }
         }
 
         if(me.up && me.y >= 250){
@@ -170,6 +203,36 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
 
+        if (sun.state == SUNSTATE.sunUp && sun.y - sun.size == 30){   //sonne oben angekommen
+          sunIdle = 1;
+        } else {
+
+        if (sun.state == SUNSTATE.sunDown && sun.y + sun.size >= 400){  //sonne unten angekommen
+          sun.state = SUNSTATE.moonUp;
+          sun.color = Color.white;
+          sun.x = 800;
+          sun.y = 400;
+        } else {
+
+        if (sun.state == SUNSTATE.moonUp && sun.y - sun.size == 30){     //moon oben angekommen
+          sunIdle = 1;
+        } else {
+
+        if (sun.state == SUNSTATE.moonDown && sun.y - sun.size == 400){ //moon unten angekommen
+          sun.state = SUNSTATE.sunUp;
+          sun.color = Color.yellow;
+          sun.x = 800;
+          sun.y = 400;
+        }
+
+            }
+          }
+        }     //endof ifs
+
+
+
+
+
     }
 
 
@@ -189,7 +252,15 @@ public class MySnake extends JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            me.jump();
+
+
+            if(e.getKeyCode() == KeyEvent.VK_NUMPAD7){
+              System.out.print(sun.x);
+              System.out.print(" ");
+              System.out.print(sun.y);
+              System.out.print(" ");
+              System.out.println(sunIdle);
+            } else {me.jump();}
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
                 cont = 0;
@@ -253,6 +324,24 @@ public class MySnake extends JPanel implements ActionListener {
             Hw = 12;
         }
 
+
+    }
+
+    class Sun{
+
+      int x;
+      int y;
+      int size;
+      Color color;
+      SUNSTATE state;
+
+      Sun(){
+        x = 800;
+        y = 400;
+        size = 50;
+        state = SUNSTATE.moonUp;
+        color = Color.white;
+      }
 
     }
 
