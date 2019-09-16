@@ -13,24 +13,26 @@ public class MySnake extends JPanel implements ActionListener {
     private Hindernis hind = new Hindernis();
     private Hindernis hind2 = new Hindernis();
     private Hindernis hind3 = new Hindernis();
-    private int cont = 0;
-    private Timer timer;
     private Health health = new Health();
-    private boolean imune = false;
-    private int iters = 0;
-    private boolean gameover = false;
+
+    private Timer timer;
     private Color backgr;
-    private float bright = 0.97f;
+
+    private boolean imune = false;
+    private boolean gameover = false;
     private boolean darker = false;
+    private float bright = 0.97f;
+    private int iters = 0;
+    private int cont = 0;
 
 
     MySnake(){
-        backgr = Color.decode("#1313CA");
         setBackground(backgr);
         setFocusable(true);
         requestFocusInWindow();
         addKeyListener(new TAdapter());
         setPreferredSize(new Dimension(800, 400));
+        backgr = Color.decode("#1313CA");
         timer = new Timer(5, this);
         timer.start();
     }
@@ -43,18 +45,20 @@ public class MySnake extends JPanel implements ActionListener {
 
         int abstnd = 30;
         for (int i = 0; i < health.count; i++){
-            int[] xPoints = {i * abstnd, i * abstnd,  12+i*abstnd, 15+i*abstnd, 27+i*abstnd, 27+i*abstnd, 23+i*abstnd, 16+i*abstnd, 16+i*abstnd, 11+i*abstnd, 11+i*abstnd , 4+i*abstnd, i * abstnd};
+            int[] xPoints = {i * abstnd, i * abstnd,  12+i*abstnd, 15+i*abstnd,
+               27+i*abstnd, 27+i*abstnd, 23+i*abstnd, 16+i*abstnd, 16+i*abstnd,
+               11+i*abstnd, 11+i*abstnd , 4+i*abstnd, i * abstnd};
             int[] yPoints = {5, 15, 26, 26, 15,  5,  0,  0,  1, 1,  0  , 0, 5};
             g.setColor(Color.decode("#C91010"));
             g.fillPolygon(xPoints, yPoints, 13);
-
-        }
+          }
         g.setColor(Color.green);
         g.fillRect(hind.Hx, hind.Hy, hind.Hw, 400);
         g.fillRect(hind2.Hx, hind2.Hy, hind2.Hw, 400);
         g.fillRect(hind3.Hx, hind3.Hy, hind3.Hw, 400);
         g.setColor(Color.orange);
         g.fillRect(0, 320, 800, 399);
+
         if(gameover){
             String msg = "Game Over";
             String msg2 = "Your score: " + cont;
@@ -65,8 +69,8 @@ public class MySnake extends JPanel implements ActionListener {
             g.setFont(small);
             g.drawString(msg, (800 - metr.stringWidth(msg)) / 2, 400 / 2 - 9);
             g.drawString(msg2, (800 - metr.stringWidth(msg2)) / 2, 400 / 2 + 9);
-        }
-    }
+          }
+      }
 
 
     private boolean collision(){
@@ -83,12 +87,14 @@ public class MySnake extends JPanel implements ActionListener {
         if (hind3.Hx < me.x + 10 && me.x + 10 < hind3.Hx + hind3.Hw){
             return me.y + 11 >= hind3.Hy;
         }
+
         return false;
     }
 
 
     private void doStuff(){
         cont++;
+
         if ((int) 5 - cont/10000 >= 0){
             timer.setDelay((int) (5 - cont/10000)); }
 
@@ -96,6 +102,7 @@ public class MySnake extends JPanel implements ActionListener {
             if (bright <= 0.2684843){
                 darker = true;
             }
+
             if (bright >= 0.97f){
                 darker = false;
             }
@@ -113,10 +120,12 @@ public class MySnake extends JPanel implements ActionListener {
         if(me.up && me.y >= 250){
             me.setY(me.y - 2);
         }
+
         if (me.y == 250){
             me.up = false;
             me.down = true;
         }
+
         if (me.down && me.y < 310){
             me.setY(me.y + 1);
         }
@@ -133,10 +142,12 @@ public class MySnake extends JPanel implements ActionListener {
             hind.Hx = 600 + ((int) (Math.random() * 328))*3;
             hind.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
+
         if ((hind2.Hx + hind2.Hw) < 0){
             hind2.Hx = 600 + ((int) (Math.random() * 328))*3;
             hind2.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
+
         if ((hind3.Hx + hind3.Hw) < 0){
             hind3.Hx = 600 + ((int) (Math.random() * 328))*3;
             hind3.Hy = 300 - ((int) (Math.random() * 7))*3;
@@ -149,6 +160,7 @@ public class MySnake extends JPanel implements ActionListener {
                 iters = cont;
             }
         }
+
         if (cont - iters == 12){
             imune = false;
         }
@@ -166,6 +178,7 @@ public class MySnake extends JPanel implements ActionListener {
         gameover = true;
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e){
         doStuff();
@@ -177,19 +190,19 @@ public class MySnake extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             me.jump();
-            repaint();
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
-                health.count = 4;
                 cont = 0;
                 iters = 0;
                 gameover = false;
+                health.count = 4;
                 timer.start();
             }
 
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
               System.exit(0);
             }
+
         }
 
     }
@@ -218,7 +231,7 @@ public class MySnake extends JPanel implements ActionListener {
 
         }
 
-        void setX(int _x){
+        void setX(int _x){      //probably redundant bc it's never used
             this.x = _x;
         }
 
