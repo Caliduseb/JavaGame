@@ -10,9 +10,9 @@ import java.awt.event.KeyEvent;
 public class MySnake extends JPanel implements ActionListener {
 
     private Player me = new Player();
-    private Hindernis hind = new Hindernis();
-    private Hindernis hind2 = new Hindernis();
-    private Hindernis hind3 = new Hindernis();
+    private Hindernis hind = new Hindernis(1);
+    private Hindernis hind2 = new Hindernis(2);
+    private Hindernis hind3 = new Hindernis(3);
     private Health health = new Health();
     private Sun sun = new Sun();
 
@@ -37,6 +37,9 @@ public class MySnake extends JPanel implements ActionListener {
         requestFocusInWindow();
         addKeyListener(new TAdapter());
         setPreferredSize(new Dimension(800, 400));
+        hind.Hx = 600;
+        hind2.Hx = 800;
+        hind3.Hx = 1200;
         timer = new Timer(5, this);
         timer.start();
     }
@@ -62,7 +65,9 @@ public class MySnake extends JPanel implements ActionListener {
 
         g.setColor(Color.green);
         g.fillRect(hind.Hx, hind.Hy, hind.Hw, 400);       //Hindernisse Rendern
+        g.setColor(Color.green.darker());
         g.fillRect(hind2.Hx, hind2.Hy, hind2.Hw, 400);
+        g.setColor(Color.green.darker().darker());
         g.fillRect(hind3.Hx, hind3.Hy, hind3.Hw, 400);
         g.setColor(Color.orange);
         g.fillRect(0, 320, 800, 399);                     //Boden rendern
@@ -172,17 +177,17 @@ public class MySnake extends JPanel implements ActionListener {
         hind3.Hx -= 1;
 
         if ((hind.Hx + hind.Hw) < 0){
-            hind.Hx = 600 + ((int) (Math.random() * 328))*3;
+            hind.Hx = generateNewPosition(1);
             hind.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
 
         if ((hind2.Hx + hind2.Hw) < 0){
-            hind2.Hx = 600 + ((int) (Math.random() * 328))*3;
+            hind2.Hx = generateNewPosition(2);
             hind2.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
 
         if ((hind3.Hx + hind3.Hw) < 0){
-            hind3.Hx = 600 + ((int) (Math.random() * 328))*3;
+            hind3.Hx = generateNewPosition(3);
             hind3.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
 
@@ -236,6 +241,32 @@ public class MySnake extends JPanel implements ActionListener {
     }
 
 
+
+    private int generateNewPosition(int h){
+
+      int abs = 400;
+      int Hx = 700 + (int)((int) (Math.random() * 328))*2;
+      if (h == 1){
+        while(hind2.Hx < Hx && Hx < hind2.Hx + abs || hind3.Hx < Hx && Hx < hind3.Hx + abs){
+        Hx = 700 + (int)((int) (Math.random() * 328))*2;
+      }
+      }
+      if (h == 2){
+        while(hind.Hx < Hx && Hx < hind.Hx + abs || hind3.Hx < Hx && Hx < hind3.Hx + abs){
+        Hx = 700 + (int)((int) (Math.random() * 328))*2;
+      }
+      }
+      if (h == 3){
+        while(hind2.Hx < Hx && Hx < hind2.Hx + abs || hind.Hx < Hx && Hx < hind.Hx + abs){
+        Hx = 700 + (int)((int) (Math.random() * 328))*2;
+      }
+      }      return Hx;
+
+    }
+
+
+
+
     private void gameOver(){
         timer.stop();
         gameover = true;
@@ -255,11 +286,13 @@ public class MySnake extends JPanel implements ActionListener {
 
 
             if(e.getKeyCode() == KeyEvent.VK_NUMPAD7){
-              System.out.print(sun.x);
+              System.out.print(hind.Hx);
               System.out.print(" ");
-              System.out.print(sun.y);
+              System.out.print(hind2.Hx);
               System.out.print(" ");
-              System.out.println(sunIdle);
+              System.out.print(hind3.Hx);
+              System.out.print(" ");
+              System.out.println(" ");
             } else {me.jump();}
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -317,12 +350,16 @@ public class MySnake extends JPanel implements ActionListener {
         int Hx;
         int Hy;
         int Hw;
+        int id;
 
-        Hindernis(){
-            Hx = 700 + ((int) (Math.random() * 328))*3;
-            Hy = 300 - ((int) (Math.random() * 7))*3;
-            Hw = 12;
+        Hindernis(int id){
+          Hx = Hx = 700 + ((int) (Math.random() * 328))*3;
+          Hy = 300 - ((int) (Math.random() * 7))*3;
+          Hw = 12;
+          id = id;
         }
+
+
 
 
     }
@@ -356,5 +393,10 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
     }
+
+
+
+
+
 
 }
