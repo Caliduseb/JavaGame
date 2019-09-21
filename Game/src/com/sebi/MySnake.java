@@ -2,10 +2,7 @@ package com.sebi;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 public class MySnake extends JPanel implements ActionListener {
 
@@ -26,11 +23,16 @@ public class MySnake extends JPanel implements ActionListener {
     private int asd;
     private int sunIdle = 0;
     private int iters = 0;
-    private int cont = 0;
+    private int count = 0;
+    private int upspeed;
+    private int downspeed;
     enum SUNSTATE {sunUp, sunDown, moonUp, moonDown;}
 
 
-    MySnake(){
+    MySnake(int PlayerSpeed){
+        if(PlayerSpeed == 1){upspeed = downspeed = 1;}
+        if(PlayerSpeed == 2){upspeed = 2; downspeed = 1;}
+        if(PlayerSpeed == 3){upspeed = 2; downspeed = 2;}
         backgr = Color.getHSBColor(0.6f, 0.8f, 0.97f/2);
         setBackground(backgr);                  //init JPanel properties
         setFocusable(true);
@@ -75,7 +77,7 @@ public class MySnake extends JPanel implements ActionListener {
 
         if(gameover){
             String msg = "Game Over";
-            String msg2 = "Your score: " + cont;
+            String msg2 = "Your score: " + count;
             Font small = new Font("Helvetica", Font.BOLD, 14);
             FontMetrics metr = getFontMetrics(small);
 
@@ -108,16 +110,16 @@ public class MySnake extends JPanel implements ActionListener {
 
 
     private void doStuff(){
-        cont++;
+        count++;
 
-        if ((int) 5 - cont/10000 >= 0){
-            timer.setDelay((int) (5 - cont/10000));
+        if ((int) 5 - count/10000 >= 0){
+            timer.setDelay((int) (5 - count/10000));
         }
 
-        if(cont % 1 == 0){
+        if(count % 1 == 0){
               if (bright <= 0.2684843){
                   darker = true;
-                  asd = cont;
+                  asd = count;
               }
 
               if (bright >= 0.97f){
@@ -140,7 +142,7 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
 
-        if(cont % 1.5 == 0){
+        if(count % 1.5 == 0){
           if ( sun.state == SUNSTATE.sunUp && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
           if ( sun.state == SUNSTATE.sunDown){ sun.y += 1; sun.x -= 1;}
           if ( sun.state == SUNSTATE.moonUp  && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
@@ -156,7 +158,7 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
         if(me.up && me.y >= 250){
-            me.setY(me.y - 2);
+            me.setY(me.y - upspeed);
         }
 
         if (me.y == 250){
@@ -165,7 +167,7 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
         if (me.down && me.y < 310){
-            me.setY(me.y + 1);
+            me.setY(me.y + downspeed);
         }
 
         if(me.down && me.y == 310){
@@ -195,11 +197,11 @@ public class MySnake extends JPanel implements ActionListener {
             if (!imune) {
                 health.count -= 1;
                 imune = true;
-                iters = cont;
+                iters = count;
             }
         }
 
-        if (cont - iters == 12){
+        if (count - iters == 12){
             imune = false;
         }
 
@@ -242,26 +244,17 @@ public class MySnake extends JPanel implements ActionListener {
 
 
 
-    private int generateNewPosition(int h){
-
-      int abs = 400;
-      int Hx = 700 + (int)((int) (Math.random() * 328))*2;
-      if (h == 1){
-        while(hind2.Hx < Hx && Hx < hind2.Hx + abs || hind3.Hx < Hx && Hx < hind3.Hx + abs){
-        Hx = 700 + (int)((int) (Math.random() * 328))*2;
+    private int generateNewPosition(int id){
+      if (id==1){
+        return (int)(Math.random() * 100) + 800;
       }
+      if (id==2){
+        return (int)(Math.random() * 100) + 1600;
       }
-      if (h == 2){
-        while(hind.Hx < Hx && Hx < hind.Hx + abs || hind3.Hx < Hx && Hx < hind3.Hx + abs){
-        Hx = 700 + (int)((int) (Math.random() * 328))*2;
+      if (id==3){
+              return (int)(Math.random() * 100) + 2400;
       }
-      }
-      if (h == 3){
-        while(hind2.Hx < Hx && Hx < hind2.Hx + abs || hind.Hx < Hx && Hx < hind.Hx + abs){
-        Hx = 700 + (int)((int) (Math.random() * 328))*2;
-      }
-      }      return Hx;
-
+      return 0;
     }
 
 
@@ -296,7 +289,7 @@ public class MySnake extends JPanel implements ActionListener {
             } else {me.jump();}
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
-                cont = 0;
+                count = 0;
                 iters = 0;
                 gameover = false;
                 health.count = 4;
@@ -353,7 +346,7 @@ public class MySnake extends JPanel implements ActionListener {
         int id;
 
         Hindernis(int id){
-          Hx = Hx = 700 + ((int) (Math.random() * 328))*3;
+          Hx = (int)(Math.random() * 100) + 800+id*800;
           Hy = 300 - ((int) (Math.random() * 7))*3;
           Hw = 12;
           id = id;
