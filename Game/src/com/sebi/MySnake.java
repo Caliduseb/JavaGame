@@ -15,18 +15,19 @@ public class MySnake extends JPanel implements ActionListener {
 
     private Timer timer;
     private Color backgr;
+    private JFrame debuggConsole = new JFrame("console");
+    private JTextArea debugDisplay = new JTextArea();
 
     private boolean imune = false;
     private boolean gameover = false;
     private boolean darker = false;
     private float bright = 0.97f;
-    private int asd;
     private int sunIdle = 0;
     private int iters = 0;
     private int count = 0;
     private int upspeed;
     private int downspeed;
-    enum SUNSTATE {sunUp, sunDown, moonUp, moonDown;}
+    enum SUNSTATE {sunUp, sunDown, moonUp, moonDown}
 
 
     MySnake(int PlayerSpeed){
@@ -39,11 +40,30 @@ public class MySnake extends JPanel implements ActionListener {
         requestFocusInWindow();
         addKeyListener(new TAdapter());
         setPreferredSize(new Dimension(800, 400));
+        initConsole();
         hind.Hx = 600;
         hind2.Hx = 800;
         hind3.Hx = 1200;
         timer = new Timer(5, this);
         timer.start();
+    }
+
+
+    private void initConsole(){
+        debuggConsole.setResizable(false);
+        debuggConsole.setLocation(10, 10);
+        debugDisplay.setAlignmentY(JLabel.TOP_ALIGNMENT);
+        debugDisplay.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+        debugDisplay.setOpaque(true);
+        debugDisplay.setEditable(false);
+        debugDisplay.setText("");
+        debugDisplay.setForeground(Color.GREEN);
+        debugDisplay.setBackground(Color.BLACK);
+        debugDisplay.setFont(new Font("Unispace", 1, 13));
+        debugDisplay.setLineWrap(true);
+        debuggConsole.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        debuggConsole.add(debugDisplay);
+        debuggConsole.setVisible(false);
     }
 
     @Override
@@ -58,12 +78,12 @@ public class MySnake extends JPanel implements ActionListener {
         int abstnd = 30;
         for (int i = 0; i < health.count; i++){                                 //Herzen rendern
             int[] xPoints = {i * abstnd, i * abstnd,  12+i*abstnd, 15+i*abstnd,
-               27+i*abstnd, 27+i*abstnd, 23+i*abstnd, 16+i*abstnd, 16+i*abstnd,
-               11+i*abstnd, 11+i*abstnd , 4+i*abstnd, i * abstnd};
+                    27+i*abstnd, 27+i*abstnd, 23+i*abstnd, 16+i*abstnd, 16+i*abstnd,
+                    11+i*abstnd, 11+i*abstnd , 4+i*abstnd, i * abstnd};
             int[] yPoints = {5, 15, 26, 26, 15,  5,  0,  0,  1, 1,  0  , 0, 5};
             g.setColor(Color.decode("#C91010"));
             g.fillPolygon(xPoints, yPoints, 13);
-          }
+        }
 
         g.setColor(Color.green);
         g.fillRect(hind.Hx, hind.Hy, hind.Hw, 400);       //Hindernisse Rendern
@@ -85,9 +105,9 @@ public class MySnake extends JPanel implements ActionListener {
             g.setFont(small);
             g.drawString(msg, (800 - metr.stringWidth(msg)) / 2, 400 / 2 - 9);
             g.drawString(msg2, (800 - metr.stringWidth(msg2)) / 2, 400 / 2 + 9);
-          }
+        }
 
-      }
+    }
 
 
     private boolean collision(){
@@ -112,49 +132,46 @@ public class MySnake extends JPanel implements ActionListener {
     private void doStuff(){
         count++;
 
-        if ((int) 5 - count/10000 >= 0){
-            timer.setDelay((int) (5 - count/10000));
+        if (5 - count/10000 >= 0){
+            timer.setDelay((5 - count/10000));
         }
 
-        if(count % 1 == 0){
-              if (bright <= 0.2684843){
-                  darker = true;
-                  asd = count;
-              }
+        //if(count % 1 == 0){
+            if (bright <= 0.2684843){
+                darker = true;
+            }
 
-              if (bright >= 0.97f){
-                  darker = false;
-                  //-1781
-              }
+            if (bright >= 0.97f){
+                darker = false;
+                //-1781
+            }
 
-              if (darker){
-                  bright += 0.0005/2;
-              } else {
-                  bright -= 0.0005;
-              }
+            if (darker){
+                bright += 0.0005/2;
+            } else {
+                bright -= 0.0005;
+            }
 
-              backgr = Color.getHSBColor(0.6f, 0.8f, bright);
-              setBackground(backgr);
-
+            backgr = Color.getHSBColor(0.6f, 0.8f, bright);
+            setBackground(backgr);
 
 
-
-        }
+        //}
 
 
         if(count % 1.5 == 0){
-          if ( sun.state == SUNSTATE.sunUp && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
-          if ( sun.state == SUNSTATE.sunDown){ sun.y += 1; sun.x -= 1;}
-          if ( sun.state == SUNSTATE.moonUp  && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
-          if ( sun.state == SUNSTATE.moonDown){sun.y += 1; sun.x -= 1;}
-          if ( sunIdle > 0){
-            sun.x -= 1;
-            if (sun.x <= 315){
-              sunIdle = 0;
-              if (sun.state == SUNSTATE.sunUp){sun.state = SUNSTATE.sunDown;}
-              if (sun.state == SUNSTATE.moonUp){sun.state = SUNSTATE.moonDown;}
+            if ( sun.state == SUNSTATE.sunUp && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
+            if ( sun.state == SUNSTATE.sunDown){ sun.y += 1; sun.x -= 1;}
+            if ( sun.state == SUNSTATE.moonUp  && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
+            if ( sun.state == SUNSTATE.moonDown){sun.y += 1; sun.x -= 1;}
+            if ( sunIdle > 0){
+                sun.x -= 1;
+                if (sun.x <= 315){
+                    sunIdle = 0;
+                    if (sun.state == SUNSTATE.sunUp){sun.state = SUNSTATE.sunDown;}
+                    if (sun.state == SUNSTATE.moonUp){sun.state = SUNSTATE.moonDown;}
+                }
             }
-          }
         }
 
         if(me.up && me.y >= 250){
@@ -211,53 +228,55 @@ public class MySnake extends JPanel implements ActionListener {
 
 
         if (sun.state == SUNSTATE.sunUp && sun.y - sun.size == 30){   //sonne oben angekommen
-          sunIdle = 1;
+            sunIdle = 1;
         } else {
 
-        if (sun.state == SUNSTATE.sunDown && sun.y + sun.size >= 400){  //sonne unten angekommen
-          sun.state = SUNSTATE.moonUp;
-          sun.color = Color.white;
-          sun.x = 800;
-          sun.y = 400;
-        } else {
+            if (sun.state == SUNSTATE.sunDown && sun.y + sun.size >= 400){  //sonne unten angekommen
+                sun.state = SUNSTATE.moonUp;
+                sun.color = Color.white;
+                sun.x = 800;
+                sun.y = 400;
+            } else {
 
-        if (sun.state == SUNSTATE.moonUp && sun.y - sun.size == 30){     //moon oben angekommen
-          sunIdle = 1;
-        } else {
+                if (sun.state == SUNSTATE.moonUp && sun.y - sun.size == 30){     //moon oben angekommen
+                    sunIdle = 1;
+                } else {
 
-        if (sun.state == SUNSTATE.moonDown && sun.y - sun.size == 400){ //moon unten angekommen
-          sun.state = SUNSTATE.sunUp;
-          sun.color = Color.yellow;
-          sun.x = 800;
-          sun.y = 400;
-        }
+                    if (sun.state == SUNSTATE.moonDown && sun.y - sun.size == 400){ //moon unten angekommen
+                        sun.state = SUNSTATE.sunUp;
+                        sun.color = Color.yellow;
+                        sun.x = 800;
+                        sun.y = 400;
+                    }
 
+                }
             }
-          }
         }     //endof ifs
 
-
-
-
+        debugDisplay.setText("H1: " + hind.Hx + System.lineSeparator()
+                + "S:  " + count + System.lineSeparator()
+                + "H2: " + hind2.Hx + System.lineSeparator()
+                + "H3: " + hind3.Hx + System.lineSeparator()
+                + "P:  " + me.y + System.lineSeparator()
+                + "HP: " + health.count + System.lineSeparator()
+                + "DN: " + darker + System.lineSeparator()
+        );
 
     }
-
 
 
     private int generateNewPosition(int id){
-      if (id==1){
-        return (int)(Math.random() * 100) + 800;
-      }
-      if (id==2){
-        return (int)(Math.random() * 100) + 1600;
-      }
-      if (id==3){
-              return (int)(Math.random() * 100) + 2400;
-      }
-      return 0;
+        if (id==1){
+            return (int)(Math.random() * 100) + 800;
+        }
+        if (id==2){
+            return (int)(Math.random() * 100) + 1600;
+        }
+        if (id==3){
+            return (int)(Math.random() * 100) + 2400;
+        }
+        return 0;
     }
-
-
 
 
     private void gameOver(){
@@ -279,13 +298,16 @@ public class MySnake extends JPanel implements ActionListener {
 
 
             if(e.getKeyCode() == KeyEvent.VK_NUMPAD7){
-              System.out.print(hind.Hx);
-              System.out.print(" ");
-              System.out.print(hind2.Hx);
-              System.out.print(" ");
-              System.out.print(hind3.Hx);
-              System.out.print(" ");
-              System.out.println(" ");
+
+                if(!debuggConsole.isVisible()){
+                    debuggConsole.setSize(300, 400);
+                    debuggConsole.setVisible(true);
+                } else {
+                    debuggConsole.setVisible(false);
+                }
+
+                Main.Frame.toFront();
+
             } else {me.jump();}
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -297,7 +319,7 @@ public class MySnake extends JPanel implements ActionListener {
             }
 
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-              System.exit(0);
+                System.exit(0);
             }
 
         }
@@ -328,9 +350,9 @@ public class MySnake extends JPanel implements ActionListener {
 
         }
 
-        void setX(int _x){      //probably redundant bc it's never used
+        /*void setX(int _x){      //probably redundant bc it's never used
             this.x = _x;
-        }
+        }*/
 
         void setY(int _y){
             this.y = _y;
@@ -338,42 +360,40 @@ public class MySnake extends JPanel implements ActionListener {
 
     }
 
+
     class Hindernis{
 
         int Hx;
         int Hy;
         int Hw;
-        int id;
 
         Hindernis(int id){
-          Hx = (int)(Math.random() * 100) + 800+id*800;
-          Hy = 300 - ((int) (Math.random() * 7))*3;
-          Hw = 12;
-          id = id;
+            Hx = (int)(Math.random() * 100) + 800+id*800;
+            Hy = 300 - ((int) (Math.random() * 7))*3;
+            Hw = 12;
         }
 
-
-
-
     }
+
 
     class Sun{
 
-      int x;
-      int y;
-      int size;
-      Color color;
-      SUNSTATE state;
+        int x;
+        int y;
+        int size;
+        Color color;
+        SUNSTATE state;
 
-      Sun(){
-        x = 800;
-        y = 400;
-        size = 50;
-        state = SUNSTATE.moonUp;
-        color = Color.white;
-      }
+        Sun(){
+            x = 800;
+            y = 400;
+            size = 50;
+            state = SUNSTATE.moonUp;
+            color = Color.white;
+        }
 
     }
+
 
     class Health{
 
@@ -386,10 +406,5 @@ public class MySnake extends JPanel implements ActionListener {
         }
 
     }
-
-
-
-
-
 
 }

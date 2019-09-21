@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class Main {
-    private static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main void for easier access later
+    static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main void for easier access later
 
     public static void main(String[] args) {
       GridLayout layout = new GridLayout(0,1);
