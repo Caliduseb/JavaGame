@@ -1,6 +1,7 @@
 ## The Simplest Java Game You've Ever Seen!
 
 This is a simple jump n run game, similar to the [Google Chrome Dinosaur Game](chrome://dino), but without any image based graphics and with a day / night cycle
+
 ![Java Game](Game.jpg)
 **The the most primitive Menus and Graphics**
 
