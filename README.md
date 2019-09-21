@@ -2,7 +2,9 @@
 ![Java Game](Game.jpg)
 **The the most primitive Menus**
 
-I just had one week to complete this project, so I had to keep it as simple as possible
+I just had a few days to complete this project, so I had to keep it as simple as possible.
+But if you have ideas or tips how I can technically improve, please message me :)
+
 ![Menu](Menu.jpg) 
 
 **Please help me to improve this project**
