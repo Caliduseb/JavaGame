@@ -1,6 +1,7 @@
 ## The Simplest Java Game You've Ever Seen!
 ![Java Game](Game.jpg)
 **The the most primitive Menus**
+
 I just had one week to complete this project, so I had to keep it as simple as possible
 ![Menu](Menu.jpg) 
 
