@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MySnake extends JPanel implements ActionListener {
-
+                                                        //init Objects
     private Player me = new Player();
     private Hindernis hind = new Hindernis(1);
     private Hindernis hind2 = new Hindernis(2);
@@ -18,7 +18,7 @@ public class MySnake extends JPanel implements ActionListener {
     private JFrame debuggConsole = new JFrame("console");
     private JTextArea debugDisplay = new JTextArea();
 
-    private boolean imune = false;
+    private boolean imune = false;                      //init variables
     private boolean gameover = false;
     private boolean darker = false;
     private float bright = 0.97f;
@@ -35,7 +35,7 @@ public class MySnake extends JPanel implements ActionListener {
         if(PlayerSpeed == 2){upspeed = 2; downspeed = 1;}
         if(PlayerSpeed == 3){upspeed = 2; downspeed = 2;}
         backgr = Color.getHSBColor(0.6f, 0.8f, 0.97f/2);
-        setBackground(backgr);                  //init JPanel properties
+        setBackground(backgr);                                       //init JPanel properties
         setFocusable(true);
         requestFocusInWindow();
         addKeyListener(new TAdapter());
@@ -49,7 +49,7 @@ public class MySnake extends JPanel implements ActionListener {
     }
 
 
-    private void initConsole(){
+    private void initConsole(){                                 //making a console Frame with Text
         debuggConsole.setResizable(false);
         debuggConsole.setLocation(10, 10);
         debugDisplay.setAlignmentY(JLabel.TOP_ALIGNMENT);
@@ -59,12 +59,13 @@ public class MySnake extends JPanel implements ActionListener {
         debugDisplay.setText("");
         debugDisplay.setForeground(Color.GREEN);
         debugDisplay.setBackground(Color.BLACK);
-        debugDisplay.setFont(new Font("Unispace", 1, 13));
+        debugDisplay.setFont(new Font("Unispace", Font.BOLD, 13));
         debugDisplay.setLineWrap(true);
         debuggConsole.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         debuggConsole.add(debugDisplay);
         debuggConsole.setVisible(false);
     }
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -131,11 +132,11 @@ public class MySnake extends JPanel implements ActionListener {
 
     private void doStuff(){
         count++;
-
+                                                //nach einiger Zeit immer schneller werden
         if (5 - count/10000 >= 0){
             timer.setDelay((5 - count/10000));
         }
-
+                                        //Hintergrund und Tageszeit
         //if(count % 1 == 0){
             if (bright <= 0.2684843){
                 darker = true;
@@ -157,7 +158,7 @@ public class MySnake extends JPanel implements ActionListener {
 
 
         //}
-
+                                                    //sonnenzyklus
 
         if(count % 1.5 == 0){
             if ( sun.state == SUNSTATE.sunUp && sunIdle < 1){ sun.y -= 1; sun.x -= 1;}
@@ -173,6 +174,8 @@ public class MySnake extends JPanel implements ActionListener {
                 }
             }
         }
+
+                                                //jump mechanic
 
         if(me.up && me.y >= 250){
             me.setY(me.y - upspeed);
@@ -191,11 +194,11 @@ public class MySnake extends JPanel implements ActionListener {
             me.down = false;
         }
 
-        hind.Hx -= 1;
+        hind.Hx -= 1;                                   //Hindernisse bewegen
         hind2.Hx -= 1;
         hind3.Hx -= 1;
 
-        if ((hind.Hx + hind.Hw) < 0){
+        if ((hind.Hx + hind.Hw) < 0){                       //wenn hindernisse aus dem Bild, dann neue Position generieren
             hind.Hx = generateNewPosition(1);
             hind.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
@@ -210,7 +213,7 @@ public class MySnake extends JPanel implements ActionListener {
             hind3.Hy = 300 - ((int) (Math.random() * 7))*3;
         }
 
-        if (collision()) {
+        if (collision()) {                  //player fuer 12 ticks imun machen
             if (!imune) {
                 health.count -= 1;
                 imune = true;
@@ -222,7 +225,7 @@ public class MySnake extends JPanel implements ActionListener {
             imune = false;
         }
 
-        if (health.count < 1){
+        if (health.count < 1){      //wenn tot, gameOver
             gameOver();
         }
 
@@ -252,7 +255,7 @@ public class MySnake extends JPanel implements ActionListener {
                 }
             }
         }     //endof ifs
-
+                                                                                //update Text in Console
         debugDisplay.setText("H1: " + hind.Hx + System.lineSeparator()
                 + "S:  " + count + System.lineSeparator()
                 + "H2: " + hind2.Hx + System.lineSeparator()
@@ -266,16 +269,7 @@ public class MySnake extends JPanel implements ActionListener {
 
 
     private int generateNewPosition(int id){
-        if (id==1){
-            return (int)(Math.random() * 100) + 800;
-        }
-        if (id==2){
-            return (int)(Math.random() * 100) + 1600;
-        }
-        if (id==3){
-            return (int)(Math.random() * 100) + 2400;
-        }
-        return 0;
+        return (int)(Math.random() * 100) + 800+800*id;
     }
 
 
@@ -402,7 +396,7 @@ public class MySnake extends JPanel implements ActionListener {
 
         Health(){
             count = 4;
-            icon = new ImageIcon("src/com/sebi/heart.png").getImage();
+            icon = new ImageIcon("src/com/sebi/heart.png").getImage(); //TODO: getClass.getResource()
         }
 
     }
