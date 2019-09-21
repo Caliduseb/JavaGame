@@ -10,5 +10,5 @@ But if you have ideas or tips how I can technically improve, please message me :
 
 
 **Please help me to improve this project**
-- [Twitter](https://twitter.com/caliduseb_hd)
-- [YouTube](https://www.youtube.com/channel/UCeR3hdUxUWixnC253dku2uQ/)
+- [[Twitter]](https://twitter.com/caliduseb_hd)
+- [[YouTube]](https://www.youtube.com/channel/UCeR3hdUxUWixnC253dku2uQ/)
