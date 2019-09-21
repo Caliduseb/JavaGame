@@ -1,2 +1,3 @@
-# JavaGame
-just a quick way of hosting my Java Project for School
+![Java Game](Game.jpg)
+## The Simplest Java Game You've Ever Seen!
+[Twitter](https://twitter.com/caliduseb_hd)
