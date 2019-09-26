@@ -91,10 +91,12 @@ public class MySnake extends JPanel implements ActionListener {
 
         g.setColor(sun.color);
         g.fillOval(sun.x - sun.size, sun.y - sun.size, sun.size, sun.size);
-        g.drawImage(bg1, bgp1,-80, this);
-        g.drawImage(bg1, bgp1+800,-80, this);
-        g.drawImage(bg2, bgp2,-80, this);
-        g.drawImage(bg2, bgp2+800,-80, this);
+        if(Main.parallaxscrolling) {
+            g.drawImage(bg1, bgp1, -80, this);
+            g.drawImage(bg1, bgp1 + 800, -80, this);
+            g.drawImage(bg2, bgp2, -80, this);
+            g.drawImage(bg2, bgp2 + 800, -80, this);
+        }
         g.setColor(Color.yellow);
         g.fillRect(me.x, me.y, 10, 10);                   //Player rendern
 
@@ -116,8 +118,10 @@ public class MySnake extends JPanel implements ActionListener {
         g.fillRect(hind3.Hx, hind3.Hy, hind3.Hw, 400);
         g.setColor(Color.orange);
         g.fillRect(0, 320, 800, 399);                     //Boden rendern
-        g.drawImage(bg2, fx, -20, this);
-        g.drawImage(bg2, fx+800,-20, this);
+        if(Main.parallaxscrolling) {
+            g.drawImage(bg2, fx, -20, this);
+            g.drawImage(bg2, fx + 800, -20, this);
+        }
 
 
         if(gameover){

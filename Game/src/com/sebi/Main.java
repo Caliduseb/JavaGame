@@ -6,8 +6,12 @@ import java.awt.event.*;
 
 public class Main {
     static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main void for easier access later
+    static boolean parallaxscrolling = false;
 
     public static void main(String[] args) {                        //making a main menu
+        if(args.length > 0){
+            parallaxscrolling = true;
+        }
         GridLayout layout = new GridLayout(0,1);         //buttons in grid layout
         JPanel Menu = new JPanel();                                 //initialising the Menu Panel
         JButton slow = new JButton("slow");                     //defining buttons
