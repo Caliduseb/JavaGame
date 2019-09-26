@@ -1,8 +1,12 @@
 package com.sebi;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 
 public class MySnake extends JPanel implements ActionListener {
                                                         //init Objects
@@ -12,6 +16,11 @@ public class MySnake extends JPanel implements ActionListener {
     private Hindernis hind3 = new Hindernis(3);
     private Health health = new Health();
     private Sun sun = new Sun();
+    private BufferedImage bg1;
+    private BufferedImage bg2;
+    private int bgp1 = 0;
+    private int bgp2 = 0;
+    private int fx = 0;
 
     private Timer timer;
     private Color backgr;
@@ -31,6 +40,14 @@ public class MySnake extends JPanel implements ActionListener {
 
 
     MySnake(int PlayerSpeed){
+        try{
+            URL resource = MySnake.class.getResource("bg1.png");
+            bg1 = ImageIO.read(resource);
+            URL resource2 = MySnake.class.getResource("bg2.png");
+            bg2 = ImageIO.read(resource2);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if(PlayerSpeed == 1){upspeed = downspeed = 1;}
         if(PlayerSpeed == 2){upspeed = 2; downspeed = 1;}
         if(PlayerSpeed == 3){upspeed = 2; downspeed = 2;}
@@ -71,8 +88,13 @@ public class MySnake extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+
         g.setColor(sun.color);
         g.fillOval(sun.x - sun.size, sun.y - sun.size, sun.size, sun.size);
+        g.drawImage(bg1, bgp1,-80, this);
+        g.drawImage(bg1, bgp1+800,-80, this);
+        g.drawImage(bg2, bgp2,-80, this);
+        g.drawImage(bg2, bgp2+800,-80, this);
         g.setColor(Color.yellow);
         g.fillRect(me.x, me.y, 10, 10);                   //Player rendern
 
@@ -94,6 +116,8 @@ public class MySnake extends JPanel implements ActionListener {
         g.fillRect(hind3.Hx, hind3.Hy, hind3.Hw, 400);
         g.setColor(Color.orange);
         g.fillRect(0, 320, 800, 399);                     //Boden rendern
+        g.drawImage(bg2, fx, -20, this);
+        g.drawImage(bg2, fx+800,-20, this);
 
 
         if(gameover){
@@ -174,6 +198,26 @@ public class MySnake extends JPanel implements ActionListener {
                 }
             }
         }
+
+        if(count % 4 == 0){
+            bgp1 -= 1;
+        }
+        if(bgp1 == -800){
+            bgp1 = 0;
+        }
+        if(count % 2 == 0){
+            bgp2 -= 1;
+        }
+        if(bgp2 == -800){
+            bgp2 = 0;
+        }
+        fx--;
+        if(fx == -800){
+            fx = 0;
+        }
+
+
+
 
                                                 //jump mechanic
 
@@ -263,6 +307,8 @@ public class MySnake extends JPanel implements ActionListener {
                 + "P:  " + me.y + System.lineSeparator()
                 + "HP: " + health.count + System.lineSeparator()
                 + "DN: " + darker + System.lineSeparator()
+                + "p1: " + bgp1 + System.lineSeparator()
+                + "p2: " + bgp2 + System.lineSeparator()
         );
 
     }
@@ -302,7 +348,13 @@ public class MySnake extends JPanel implements ActionListener {
 
                 Main.Frame.toFront();
 
-            } else {me.jump();}
+            } else {
+                if (e.getKeyCode() == KeyEvent.VK_P){
+                    if(timer.isRunning()){timer.stop();} else {timer.restart();}
+                }else {
+                    me.jump();
+                }
+            }
 
             if(gameover && e.getKeyCode() == KeyEvent.VK_ENTER){
                 count = 0;
