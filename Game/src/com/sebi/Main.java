@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class Main {
-    static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main void for easier access later
+    static JFrame Frame = new JFrame("Game");   //delcaring JFrame out of main method for easier access later
     static boolean parallaxscrolling = false;
 
     public static void main(String[] args) {                        //making a main menu
